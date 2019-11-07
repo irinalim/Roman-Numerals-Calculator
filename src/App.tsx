@@ -42,14 +42,14 @@ class App extends Component {
     }
 
     handleChangeOne = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const roman1 = e.target.value.trim()
+        const roman1 = e.target.value.trim().toUpperCase()
         this.setState(() => ({
             roman1
         }))
     }
 
     handleChangeTwo = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const roman2 = e.target.value.trim()
+        const roman2 = e.target.value.trim().toUpperCase()
 
         this.setState(() => ({
             roman2
@@ -62,6 +62,7 @@ class App extends Component {
         const {roman1, roman2, operation} = this.state
       let number1 = this.romanToInt(roman1)
       let number2 = this.romanToInt(roman2)
+      console.log(number2, number1)
 
         // swith(operation) {
         //     case 'add':
@@ -86,7 +87,8 @@ class App extends Component {
         }))
     }
 
-    clear = () => {
+    clear = (e:React.SyntheticEvent) => {
+        e.preventDefault()
         this.setState(() => (
                 {
                     roman1: '',
@@ -170,7 +172,11 @@ class App extends Component {
             <div className="App">
                 <section>
                     <div>
-                        <Card title="Roman numerals calculator" style={{width: 500, margin: '0 auto'}}>
+                        <Card
+                            title="Roman numerals calculator"
+                            style={{width: 500, margin: '0 auto'}}
+                            headStyle={{background: "#40a9ff"}}
+                        >
                             <form onSubmit={this.handleSubmit}>
                                 <div className="input">
                                   <Row type="flex" justify="center">
@@ -210,26 +216,24 @@ class App extends Component {
                                         <h3>*</h3>
                                     </div>
                                 </div>
-                                <div className="input">
-                                    <button
-                                        className='primary'
-                                        type='submit'
-                                        disabled={!roman1 || !roman2}
-                                    >
-                                        Calculate
-                                    </button>
+                                <div className="buttons">
+                                  <Button
+                                      size='large'
+                                      onClick={this.clear}
+                                  >
+                                    Clear
+                                  </Button>
+                                  <Button
+                                      type='primary'
+                                      size='large'
+                                      htmlType='submit'
+                                      disabled={!roman1 || !roman2}
+                                  >
+                                    Calculate
+                                  </Button>
                                 </div>
                             </form>
-                            <div>
-                                <button
-                                    className='primary'
-                                    onClick={this.clear}
-                                >
-                                    Clear
-                                </button>
-                            </div>
                         </Card>
-
                     </div>
                 </section>
 
