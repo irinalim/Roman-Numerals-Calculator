@@ -43,34 +43,24 @@ class App extends Component<Props, any> {
         roman2: '',
         operation: '+',
         result: '',
+        roman1Error: '',
+        roman2Error: '',
     }
 
+    protected handleOperation(operation: string) {
+        this.setState(() => ({operation}))
+    }
 
     protected handlePlus = () => {
-        this.setState(() => (
-                {
-                    operation: '+',
-                }
-            )
-        )
+        this.handleOperation('+')
     }
 
     protected handleMinus = () => {
-        this.setState(() => (
-                {
-                    operation: '-',
-                }
-            )
-        )
+        this.handleOperation('-')
     }
 
     protected handleMultiply = () => {
-        this.setState(() => (
-                {
-                    operation: '*',
-                }
-            )
-        )
+        this.handleOperation('*')
     }
 
     getIconType = (operation: string) => {
@@ -86,17 +76,27 @@ class App extends Component<Props, any> {
     }
 
     protected handleChangeOne = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const roman1 = e.target.value.trim().toUpperCase()
+        const roman1 = e.target.value.trim().toUpperCase().replace(/\[A-Z]/g, '')
+        let roman1Error = ''
+        if (!this.isValidRoman(roman1)) {
+            roman1Error = 'Invalid input'
+        }
         this.setState(() => ({
-            roman1
+            roman1,
+            roman1Error,
         }))
     }
 
     protected handleChangeTwo = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const roman2 = e.target.value.trim().toUpperCase()
+        const roman2 = e.target.value.trim().toUpperCase().replace(/\[A-Z]/g, '')
+        let roman2Error = ''
+        if (!this.isValidRoman(roman2)) {
+            roman2Error = 'Invalid input'
+        }
 
         this.setState(() => ({
-            roman2
+            roman2,
+            roman2Error,
         }))
     }
 
@@ -141,7 +141,7 @@ class App extends Component<Props, any> {
 
 
     protected isValidRoman(str: string) {
-        let validRomanNumerals = ["M", "D", "C", "L", "X", "V", "I"]
+        return (/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/).test(str)
     }
 
     protected romanToInt(roman: string) {
@@ -156,6 +156,7 @@ class App extends Component<Props, any> {
             } else {
                 num = num - previous * 2 + current;
             }
+            console.log(i, previous, current, num)
         }
 
         return num;
@@ -184,7 +185,8 @@ class App extends Component<Props, any> {
     }
 
     render() {
-        const {roman1, roman2, operation} = this.state
+        const {roman1, roman2, operation, roman1Error, roman2Error} = this.state
+        const isCalculateDisabled = !roman1 || !roman2 || !!roman1Error || !!roman2Error
         return (
             <div className="App">
                 <section>
@@ -198,19 +200,23 @@ class App extends Component<Props, any> {
                                 <div className="input">
                                     <Row type="flex" justify="center" align="middle">
                                         <Col span={8} style={{justifyContent: 'center'}}>
-                                            <Form.Item>
+                                            <Form.Item
+                                                validateStatus={roman1Error ? 'error' : undefined}
+                                                help={roman1Error}>
                                                 <Input size="large" placeholder="Enter a number" type="text"
                                                        value={roman1}
                                                        onChange={this.handleChangeOne}/>
                                             </Form.Item>
                                         </Col>
                                         <Col span={2}>
-                                          <Form.Item>
-                                            <Icon type={this.getIconType(operation)}/>
-                                          </Form.Item>
+                                            <Form.Item>
+                                                <Icon type={this.getIconType(operation)}/>
+                                            </Form.Item>
                                         </Col>
                                         <Col span={8}>
-                                            <Form.Item>
+                                            <Form.Item
+                                                validateStatus={roman2Error ? 'error' : undefined}
+                                                help={roman2Error}>
                                                 <Input size="large" placeholder="Enter a number" type="text"
                                                        value={roman2}
                                                        onChange={this.handleChangeTwo}/>
@@ -242,6 +248,7 @@ class App extends Component<Props, any> {
                                     <Button
                                         size='large'
                                         onClick={this.clear}
+                                        disabled={!roman1 && !roman2}
                                     >
                                         Clear
                                     </Button>
@@ -249,7 +256,7 @@ class App extends Component<Props, any> {
                                         type='primary'
                                         size='large'
                                         htmlType='submit'
-                                        disabled={!roman1 || !roman2}
+                                        disabled={isCalculateDisabled}
                                     >
                                         Calculate
                                     </Button>
