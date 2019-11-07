@@ -1,34 +1,10 @@
 import React, {Component} from 'react';
 import {Row, Col, Input, Card, Icon, message, Button, Form} from 'antd';
 import './App.css';
-
-const romans: { [key: string]: number } = {
-    I: 1,
-    V: 5,
-    X: 10,
-    L: 50,
-    C: 100,
-    D: 500,
-    M: 1000,
-};
-
-const arabicToRoman = new Map([
-    [1000, "M"],
-    [900, "CM"],
-    [500, "D"],
-    [400, "CD"],
-    [100, "C"],
-    [90, "XC"],
-    [50, "L"],
-    [40, "XL"],
-    [10, "X"],
-    [9, "IX"],
-    [5, "V"],
-    [4, "IV"],
-    [1, "I"],
-])
+import {RomanNumerals} from "./logic/RomanNumerals";
 
 class App extends Component {
+  protected readonly logic = new RomanNumerals();
     state = {
         roman1: '',
         roman2: '',
@@ -69,7 +45,7 @@ class App extends Component {
     protected handleChangeOne = (e: React.ChangeEvent<HTMLInputElement>) => {
         const roman1 = e.target.value.trim().toUpperCase().replace(/\[A-Z]/g, '');
         let roman1Error = '';
-        if (!this.isValidRoman(roman1)) {
+        if (!this.logic.isValidRoman(roman1)) {
             roman1Error = 'Invalid input';
         }
         this.setState(() => ({
@@ -81,7 +57,7 @@ class App extends Component {
     protected handleChangeTwo = (e: React.ChangeEvent<HTMLInputElement>) => {
         const roman2 = e.target.value.trim().toUpperCase().replace(/\[A-Z]/g, '');
         let roman2Error = '';
-        if (!this.isValidRoman(roman2)) {
+        if (!this.logic.isValidRoman(roman2)) {
             roman2Error = 'Invalid input';
         }
 
@@ -95,8 +71,8 @@ class App extends Component {
         let result: any;
         e.preventDefault();
         const {roman1, roman2, operation} = this.state;
-        let number1 = this.romanToArabic(roman1);
-        let number2 = this.romanToArabic(roman2);
+        let number1 = this.logic.romanToArabic(roman1);
+        let number2 = this.logic.romanToArabic(roman2);
         switch (operation) {
             case '+':
                 result = number1 + number2;
@@ -113,7 +89,7 @@ class App extends Component {
             message.warning('Result can not be negative or zero');
         }
         this.setState(() => ({
-            result: this.convertNumberToRoman(result)
+            result: this.logic.convertNumberToRoman(result)
         }));
     };
 
@@ -128,47 +104,6 @@ class App extends Component {
     };
 
 
-    protected isValidRoman = (str: string) => {
-        return (/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/).test(str);
-    };
-
-    protected romanToArabic = (roman: string) => {
-        let num = this.letterToInt(roman.charAt(0));
-        let previous, current;
-
-        for (let i = 1; i < roman.length; i++) {
-            current = this.letterToInt(roman.charAt(i));
-            previous = this.letterToInt(roman.charAt(i - 1));
-            if (current <= previous) {
-                num += current;
-            } else {
-                num = num - previous * 2 + current;
-            }
-        }
-
-        return num;
-    };
-
-    protected letterToInt =(letter: string) => {
-        return romans[letter]
-    };
-
-
-    protected convertNumberToRoman = (num: number) => {
-        let ans = "";
-        const keys = Array.from(arabicToRoman.keys());
-
-        for (let i = 0; i < keys.length; i++) {
-            const arabicNum = keys[i];
-            const romanNum = arabicToRoman.get(arabicNum);
-            if (num >= arabicNum) {
-                ans += romanNum;
-                num -= arabicNum;
-                i--;
-            }
-        }
-        return ans;
-    };
 
     render() {
         const {roman1, roman2, operation, roman1Error, roman2Error} = this.state;
