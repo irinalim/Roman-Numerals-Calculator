@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import Button from 'antd/es/button';
+import Button from 'antd/lib/button';
 import {Input} from 'antd';
 import {Row, Col} from 'antd';
-import {Card} from 'antd';
+import {Card, Icon} from 'antd';
 import {message} from 'antd';
 import './App.css';
+import Form, {FormComponentProps} from "antd/lib/form";
 
 const romans: { [key: string]: number } = {
     I: 1,
@@ -17,22 +18,26 @@ const romans: { [key: string]: number } = {
 }
 
 const arabicToRoman = new Map([
-  [1000, "M"],
-  [900, "CM"],
-  [500, "D"],
-  [400, "CD"],
-  [100, "C"],
-  [90, "XC"],
-  [50, "L"],
-  [40, "XL"],
-  [10, "X"],
-  [9, "IX"],
-  [5, "V"],
-  [4, "IV"],
-  [1, "I"],
+    [1000, "M"],
+    [900, "CM"],
+    [500, "D"],
+    [400, "CD"],
+    [100, "C"],
+    [90, "XC"],
+    [50, "L"],
+    [40, "XL"],
+    [10, "X"],
+    [9, "IX"],
+    [5, "V"],
+    [4, "IV"],
+    [1, "I"],
 ])
 
-class App extends Component {
+interface Props extends FormComponentProps {
+
+}
+
+class App extends Component<Props, any> {
     state = {
         roman1: '',
         roman2: '',
@@ -66,6 +71,18 @@ class App extends Component {
                 }
             )
         )
+    }
+
+    getIconType = (operation: string) => {
+        switch (operation) {
+            case '+':
+                return 'plus';
+            case '-':
+                return 'minus'
+            case '*':
+                return 'close'
+        }
+        return ''
     }
 
     protected handleChangeOne = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,24 +191,30 @@ class App extends Component {
                     <div>
                         <Card
                             title="Roman numerals calculator"
-                            style={{width: 500, margin: '0 auto'}}
+                            style={{width: 500}}
                             headStyle={{background: "#40a9ff"}}
                         >
                             <form onSubmit={this.handleSubmit}>
                                 <div className="input">
-                                    <Row type="flex" justify="center">
-                                        <Col span={6} style={{justifyContent: 'center'}}>
-                                            <Input size="large" placeholder="Enter a number" type="text"
-                                                   value={roman1}
-                                                   onChange={this.handleChangeOne}/>
+                                    <Row type="flex" justify="center" align="middle">
+                                        <Col span={8} style={{justifyContent: 'center'}}>
+                                            <Form.Item>
+                                                <Input size="large" placeholder="Enter a number" type="text"
+                                                       value={roman1}
+                                                       onChange={this.handleChangeOne}/>
+                                            </Form.Item>
                                         </Col>
                                         <Col span={2}>
-                                            <h2>{operation}</h2>
+                                          <Form.Item>
+                                            <Icon type={this.getIconType(operation)}/>
+                                          </Form.Item>
                                         </Col>
-                                        <Col span={6}>
-                                            <Input size="large" placeholder="Enter a number" type="text"
-                                                   value={roman2}
-                                                   onChange={this.handleChangeTwo}/>
+                                        <Col span={8}>
+                                            <Form.Item>
+                                                <Input size="large" placeholder="Enter a number" type="text"
+                                                       value={roman2}
+                                                       onChange={this.handleChangeTwo}/>
+                                            </Form.Item>
                                         </Col>
                                     </Row>
 
@@ -206,13 +229,13 @@ class App extends Component {
                                 </div>
                                 <div className='operators'>
                                     <div className='operator' onClick={this.handlePlus}>
-                                        +
+                                        <Icon type="plus"/>
                                     </div>
                                     <div className='operator' onClick={this.handleMinus}>
-                                        -
+                                        <Icon type="minus"/>
                                     </div>
                                     <div className='operator' onClick={this.handleMultiply}>
-                                        x
+                                        <Icon type="close"/>
                                     </div>
                                 </div>
                                 <div className="buttons">
@@ -240,4 +263,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default Form.create()(App);
