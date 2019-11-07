@@ -206,13 +206,13 @@ class App extends Component {
                                 </div>
                                 <div className='operators'>
                                     <div className='operator' onClick={this.handlePlus}>
-                                        <h3>+</h3>
+                                        +
                                     </div>
                                     <div className='operator' onClick={this.handleMinus}>
-                                        <h3>-</h3>
+                                        -
                                     </div>
                                     <div className='operator' onClick={this.handleMultiply}>
-                                        <h3>*</h3>
+                                        x
                                     </div>
                                 </div>
                                 <div className="buttons">
@@ -235,7 +235,6 @@ class App extends Component {
                         </Card>
                     </div>
                 </section>
-
             </div>
         );
     }
