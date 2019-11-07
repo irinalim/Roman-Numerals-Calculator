@@ -6,6 +6,32 @@ import {Card} from 'antd';
 import {message} from 'antd';
 import './App.css';
 
+const romans: { [key: string]: number } = {
+    I: 1,
+    V: 5,
+    X: 10,
+    L: 50,
+    C: 100,
+    D: 500,
+    M: 1000,
+}
+
+const arabicToRoman = new Map([
+  [1000, "M"],
+  [900, "CM"],
+  [500, "D"],
+  [400, "CD"],
+  [100, "C"],
+  [90, "XC"],
+  [50, "L"],
+  [40, "XL"],
+  [10, "X"],
+  [9, "IX"],
+  [5, "V"],
+  [4, "IV"],
+  [1, "I"],
+])
+
 class App extends Component {
     state = {
         roman1: '',
@@ -15,7 +41,7 @@ class App extends Component {
     }
 
 
-    handlePlus = () => {
+    protected handlePlus = () => {
         this.setState(() => (
                 {
                     operation: '+',
@@ -24,7 +50,7 @@ class App extends Component {
         )
     }
 
-    handleMinus = () => {
+    protected handleMinus = () => {
         this.setState(() => (
                 {
                     operation: '-',
@@ -33,7 +59,7 @@ class App extends Component {
         )
     }
 
-    handleMultiply = () => {
+    protected handleMultiply = () => {
         this.setState(() => (
                 {
                     operation: '*',
@@ -42,14 +68,14 @@ class App extends Component {
         )
     }
 
-    handleChangeOne = (e: React.ChangeEvent<HTMLInputElement>) => {
+    protected handleChangeOne = (e: React.ChangeEvent<HTMLInputElement>) => {
         const roman1 = e.target.value.trim().toUpperCase()
         this.setState(() => ({
             roman1
         }))
     }
 
-    handleChangeTwo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    protected handleChangeTwo = (e: React.ChangeEvent<HTMLInputElement>) => {
         const roman2 = e.target.value.trim().toUpperCase()
 
         this.setState(() => ({
@@ -57,7 +83,7 @@ class App extends Component {
         }))
     }
 
-    handleSubmit = (e: any) => {
+    protected handleSubmit = (e: any) => {
         let result: any
         e.preventDefault()
         const {roman1, roman2, operation} = this.state
@@ -75,15 +101,15 @@ class App extends Component {
                 break;
         }
         if (result <= 0) {
-          result = 'Invalid'
-          message.warning('Result can not be negative or zero')
+            result = 'Invalid'
+            message.warning('Result can not be negative or zero')
         }
         this.setState(() => ({
-            result: result
+            result: this.convertNumberToRoman(result)
         }))
     }
 
-    clear = (e: React.SyntheticEvent) => {
+    protected clear = (e: React.SyntheticEvent) => {
         e.preventDefault()
         this.setState(() => (
                 {
@@ -97,11 +123,11 @@ class App extends Component {
     }
 
 
-    isValidRoman(str: string) {
+    protected isValidRoman(str: string) {
         let validRomanNumerals = ["M", "D", "C", "L", "X", "V", "I"]
     }
 
-    romanToInt(roman: string) {
+    protected romanToInt(roman: string) {
         let num = this.letterToInt(roman.charAt(0));
         let previous, current;
 
@@ -118,48 +144,27 @@ class App extends Component {
         return num;
     }
 
-    letterToInt(letter: string) {
-        // var romans: object = {
-        //   I: 1,
-        //   V: 5,
-        //   X: 10,
-        //   L: 50,
-        //   C: 100,
-        //   D: 500,
-        //   M: 1000,
-        // }
-        // return romans[letter]
-        switch (letter) {
-            case 'I':
-                return 1;
-            case 'V':
-                return 5;
-            case 'X':
-                return 10;
-            case 'L':
-                return 50;
-            case 'C':
-                return 100;
-            case 'D':
-                return 500;
-            case 'M':
-                return 1000;
-            default:
-                return 0;
-        }
+    protected letterToInt(letter: string) {
+        return romans[letter]
     }
 
-    // numberToRoman(num: number) {
-    //   let digits = String(+num).split(""),
-    //       key = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
-    //         "","X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
-    //         "","I","II","III","IV","V","VI","VII","VIII","IX"],
-    //       roman_num = "",
-    //       i = 3;
-    //   while (i--)
-    //     roman_num = (key[+digits.pop() + (i * 10)] || "") + roman_num;
-    //   return Array(+digits.join("") + 1).join("M") + roman_num;
-    // }
+
+    protected convertNumberToRoman(num: number) {
+
+        let ans = "";
+        const keys = Array.from(arabicToRoman.keys())
+
+        for (let i = 0; i < keys.length; i++) {
+            const arabicNum = keys[i]
+            const romanNum = arabicToRoman.get(arabicNum)
+            if (num >= arabicNum) {
+                ans += romanNum;
+                num -= arabicNum;
+                i--;
+            }
+        }
+        return ans;
+    }
 
     render() {
         const {roman1, roman2, operation} = this.state
