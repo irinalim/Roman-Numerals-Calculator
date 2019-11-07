@@ -1,11 +1,6 @@
 import React, {Component} from 'react';
-import Button from 'antd/lib/button';
-import {Input} from 'antd';
-import {Row, Col} from 'antd';
-import {Card, Icon} from 'antd';
-import {message} from 'antd';
+import {Row, Col, Input, Card, Icon, message, Button, Form} from 'antd';
 import './App.css';
-import Form, {FormComponentProps} from "antd/lib/form";
 
 const romans: { [key: string]: number } = {
     I: 1,
@@ -15,7 +10,7 @@ const romans: { [key: string]: number } = {
     C: 100,
     D: 500,
     M: 1000,
-}
+};
 
 const arabicToRoman = new Map([
     [1000, "M"],
@@ -33,11 +28,7 @@ const arabicToRoman = new Map([
     [1, "I"],
 ])
 
-interface Props extends FormComponentProps {
-
-}
-
-class App extends Component<Props, any> {
+class App extends Component {
     state = {
         roman1: '',
         roman2: '',
@@ -45,67 +36,67 @@ class App extends Component<Props, any> {
         result: '',
         roman1Error: '',
         roman2Error: '',
-    }
+    };
 
     protected handleOperation(operation: string) {
-        this.setState(() => ({operation}))
+        this.setState(() => ({operation}));
     }
 
     protected handlePlus = () => {
-        this.handleOperation('+')
-    }
+        this.handleOperation('+');
+    };
 
     protected handleMinus = () => {
-        this.handleOperation('-')
-    }
+        this.handleOperation('-');
+    };
 
     protected handleMultiply = () => {
-        this.handleOperation('*')
-    }
+        this.handleOperation('*');
+    };
 
     getIconType = (operation: string) => {
         switch (operation) {
             case '+':
                 return 'plus';
             case '-':
-                return 'minus'
+                return 'minus';
             case '*':
-                return 'close'
+                return 'close';
         }
-        return ''
-    }
+        return '';
+    };
 
     protected handleChangeOne = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const roman1 = e.target.value.trim().toUpperCase().replace(/\[A-Z]/g, '')
-        let roman1Error = ''
+        const roman1 = e.target.value.trim().toUpperCase().replace(/\[A-Z]/g, '');
+        let roman1Error = '';
         if (!this.isValidRoman(roman1)) {
-            roman1Error = 'Invalid input'
+            roman1Error = 'Invalid input';
         }
         this.setState(() => ({
             roman1,
             roman1Error,
-        }))
-    }
+        }));
+    };
 
     protected handleChangeTwo = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const roman2 = e.target.value.trim().toUpperCase().replace(/\[A-Z]/g, '')
-        let roman2Error = ''
+        const roman2 = e.target.value.trim().toUpperCase().replace(/\[A-Z]/g, '');
+        let roman2Error = '';
         if (!this.isValidRoman(roman2)) {
-            roman2Error = 'Invalid input'
+            roman2Error = 'Invalid input';
         }
 
         this.setState(() => ({
             roman2,
             roman2Error,
-        }))
-    }
+        }));
+    };
 
-    protected handleSubmit = (e: any) => {
-        let result: any
-        e.preventDefault()
-        const {roman1, roman2, operation} = this.state
-        let number1 = this.romanToInt(roman1)
-        let number2 = this.romanToInt(roman2)
+    protected handleSubmit = (e: React.SyntheticEvent) => {
+        let result: any;
+        e.preventDefault();
+        const {roman1, roman2, operation} = this.state;
+        let number1 = this.romanToArabic(roman1);
+        let number2 = this.romanToArabic(roman2);
         switch (operation) {
             case '+':
                 result = number1 + number2;
@@ -118,33 +109,30 @@ class App extends Component<Props, any> {
                 break;
         }
         if (result <= 0) {
-            result = 'Invalid'
-            message.warning('Result can not be negative or zero')
+            result = 'Invalid';
+            message.warning('Result can not be negative or zero');
         }
         this.setState(() => ({
             result: this.convertNumberToRoman(result)
-        }))
-    }
+        }));
+    };
 
     protected clear = (e: React.SyntheticEvent) => {
-        e.preventDefault()
-        this.setState(() => (
-                {
-                    roman1: '',
-                    roman2: '',
-                    operation: '+',
-                    result: '',
-                }
-            )
-        )
-    }
+        e.preventDefault();
+        this.setState(() => ({
+            roman1: '',
+            roman2: '',
+            operation: '+',
+            result: '',
+        }));
+    };
 
 
-    protected isValidRoman(str: string) {
-        return (/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/).test(str)
-    }
+    protected isValidRoman = (str: string) => {
+        return (/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/).test(str);
+    };
 
-    protected romanToInt(roman: string) {
+    protected romanToArabic = (roman: string) => {
         let num = this.letterToInt(roman.charAt(0));
         let previous, current;
 
@@ -156,25 +144,23 @@ class App extends Component<Props, any> {
             } else {
                 num = num - previous * 2 + current;
             }
-            console.log(i, previous, current, num)
         }
 
         return num;
-    }
+    };
 
-    protected letterToInt(letter: string) {
+    protected letterToInt =(letter: string) => {
         return romans[letter]
-    }
+    };
 
 
-    protected convertNumberToRoman(num: number) {
-
+    protected convertNumberToRoman = (num: number) => {
         let ans = "";
-        const keys = Array.from(arabicToRoman.keys())
+        const keys = Array.from(arabicToRoman.keys());
 
         for (let i = 0; i < keys.length; i++) {
-            const arabicNum = keys[i]
-            const romanNum = arabicToRoman.get(arabicNum)
+            const arabicNum = keys[i];
+            const romanNum = arabicToRoman.get(arabicNum);
             if (num >= arabicNum) {
                 ans += romanNum;
                 num -= arabicNum;
@@ -182,11 +168,11 @@ class App extends Component<Props, any> {
             }
         }
         return ans;
-    }
+    };
 
     render() {
-        const {roman1, roman2, operation, roman1Error, roman2Error} = this.state
-        const isCalculateDisabled = !roman1 || !roman2 || !!roman1Error || !!roman2Error
+        const {roman1, roman2, operation, roman1Error, roman2Error} = this.state;
+        const isCalculateDisabled = !roman1 || !roman2 || !!roman1Error || !!roman2Error;
         return (
             <div className="App">
                 <section>
@@ -270,4 +256,4 @@ class App extends Component<Props, any> {
     }
 }
 
-export default Form.create()(App);
+export default App;
