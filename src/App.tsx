@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import Button from 'antd/es/button';
 import {Input} from 'antd';
-import { Row, Col } from 'antd';
+import {Row, Col} from 'antd';
 import {Card} from 'antd';
+import {message} from 'antd';
 import './App.css';
 
 class App extends Component {
@@ -60,34 +61,29 @@ class App extends Component {
         let result: any
         e.preventDefault()
         const {roman1, roman2, operation} = this.state
-      let number1 = this.romanToInt(roman1)
-      let number2 = this.romanToInt(roman2)
-      console.log(number2, number1)
-
-        // swith(operation) {
-        //     case 'add':
-        //         result = this.romanToInt(roman1) + this.romanToInt(roman2);
-        //     case 'subtract':
-        //         result = this.romanToInt(roman1) - this.romanToInt(roman2);
-        //
-        // }
-        if (operation === '+') {
-            result = number1 + number2;
-        } else if (operation === '-') {
-          if (number1 < number2) {
-            result = 'Negative'
-          } else {
-            result = number1 - number2;
-          }
-        } else if (operation === '*') {
-            result = number1 * number2;
+        let number1 = this.romanToInt(roman1)
+        let number2 = this.romanToInt(roman2)
+        switch (operation) {
+            case '+':
+                result = number1 + number2;
+                break;
+            case '-':
+                result = number1 - number2;
+                break;
+            case '*':
+                result = number1 * number2;
+                break;
+        }
+        if (result <= 0) {
+          result = 'Invalid'
+          message.warning('Result can not be negative or zero')
         }
         this.setState(() => ({
             result: result
         }))
     }
 
-    clear = (e:React.SyntheticEvent) => {
+    clear = (e: React.SyntheticEvent) => {
         e.preventDefault()
         this.setState(() => (
                 {
@@ -101,9 +97,8 @@ class App extends Component {
     }
 
 
-
-    isValidRoman(str: string){
-      let validRomanNumerals = ["M", "D", "C", "L", "X", "V", "I"]
+    isValidRoman(str: string) {
+        let validRomanNumerals = ["M", "D", "C", "L", "X", "V", "I"]
     }
 
     romanToInt(roman: string) {
@@ -124,16 +119,16 @@ class App extends Component {
     }
 
     letterToInt(letter: string) {
-      // var romans: object = {
-      //   I: 1,
-      //   V: 5,
-      //   X: 10,
-      //   L: 50,
-      //   C: 100,
-      //   D: 500,
-      //   M: 1000,
-      // }
-      // return romans[letter]
+        // var romans: object = {
+        //   I: 1,
+        //   V: 5,
+        //   X: 10,
+        //   L: 50,
+        //   C: 100,
+        //   D: 500,
+        //   M: 1000,
+        // }
+        // return romans[letter]
         switch (letter) {
             case 'I':
                 return 1;
@@ -179,22 +174,21 @@ class App extends Component {
                         >
                             <form onSubmit={this.handleSubmit}>
                                 <div className="input">
-                                  <Row type="flex" justify="center">
-                                    <Col span={6} style={{justifyContent: 'center'}}>
-                                      <Input size="large" placeholder="Enter a number" type="text"
-                                             value={roman1}
-                                             onChange={this.handleChangeOne}/>
-                                    </Col>
-                                    <Col span={2}>
-                                      <h2>{operation}</h2>
-                                    </Col>
-                                    <Col span={6}>
-                                      <Input size="large" placeholder="Enter a number" type="text"
-                                             value={roman2}
-                                             onChange={this.handleChangeTwo}/>
-                                    </Col>
-                                  </Row>
-
+                                    <Row type="flex" justify="center">
+                                        <Col span={6} style={{justifyContent: 'center'}}>
+                                            <Input size="large" placeholder="Enter a number" type="text"
+                                                   value={roman1}
+                                                   onChange={this.handleChangeOne}/>
+                                        </Col>
+                                        <Col span={2}>
+                                            <h2>{operation}</h2>
+                                        </Col>
+                                        <Col span={6}>
+                                            <Input size="large" placeholder="Enter a number" type="text"
+                                                   value={roman2}
+                                                   onChange={this.handleChangeTwo}/>
+                                        </Col>
+                                    </Row>
 
 
                                     {this.state.result !== ''
@@ -217,20 +211,20 @@ class App extends Component {
                                     </div>
                                 </div>
                                 <div className="buttons">
-                                  <Button
-                                      size='large'
-                                      onClick={this.clear}
-                                  >
-                                    Clear
-                                  </Button>
-                                  <Button
-                                      type='primary'
-                                      size='large'
-                                      htmlType='submit'
-                                      disabled={!roman1 || !roman2}
-                                  >
-                                    Calculate
-                                  </Button>
+                                    <Button
+                                        size='large'
+                                        onClick={this.clear}
+                                    >
+                                        Clear
+                                    </Button>
+                                    <Button
+                                        type='primary'
+                                        size='large'
+                                        htmlType='submit'
+                                        disabled={!roman1 || !roman2}
+                                    >
+                                        Calculate
+                                    </Button>
                                 </div>
                             </form>
                         </Card>
