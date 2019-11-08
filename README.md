@@ -1,6 +1,8 @@
 # Roman Numerals Calculator
 This app allows users to calculate roman numerals. Supported operations are addition, subtraction and multiplication.
 
+> Note: the app supports only standard forms of Roman numerals (1 to 3999)
+
 ##Technologies
 Project is created with:
 - React
