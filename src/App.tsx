@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {Row, Col, Input, Card, Icon, message, Button, Form} from 'antd';
 import './App.css';
-import {RomanNumerals} from "./logic/RomanNumerals";
+import {RomanNumsProcessor} from "./logic/RomanNumsProcessor";
 
 class App extends Component {
-  protected readonly logic = new RomanNumerals();
+    protected readonly logic = new RomanNumsProcessor();
     state = {
         roman1: '',
         roman2: '',
@@ -30,7 +30,7 @@ class App extends Component {
         this.handleOperation('*');
     };
 
-    getIconType = (operation: string) => {
+    protected getIconType = (operation: string) => {
         switch (operation) {
             case '+':
                 return 'plus';
@@ -71,8 +71,8 @@ class App extends Component {
         let result: any;
         e.preventDefault();
         const {roman1, roman2, operation} = this.state;
-        let number1 = this.logic.romanToArabic(roman1);
-        let number2 = this.logic.romanToArabic(roman2);
+        let number1 = this.logic.convertRomanToArabic(roman1);
+        let number2 = this.logic.convertRomanToArabic(roman2);
         switch (operation) {
             case '+':
                 result = number1 + number2;
@@ -89,7 +89,7 @@ class App extends Component {
             message.warning('Result can not be negative or zero');
         }
         this.setState(() => ({
-            result: this.logic.convertNumberToRoman(result)
+            result: this.logic.convertArabicToRoman(result)
         }));
     };
 
@@ -100,9 +100,10 @@ class App extends Component {
             roman2: '',
             operation: '+',
             result: '',
+            roman1Error: '',
+            roman2Error: '',
         }));
     };
-
 
 
     render() {
@@ -144,15 +145,15 @@ class App extends Component {
                                             </Form.Item>
                                         </Col>
                                     </Row>
-
-
-                                    {this.state.result !== ''
-                                        ? <div className='answer'>
-                                            <h2>=</h2>
-                                            <h2>{this.state.result}</h2>
-                                        </div>
-                                        : <div className='answer'/>}
-
+                                    <div className='answer'>
+                                        {this.state.result !== ''
+                                            ? <React.Fragment>
+                                                <h2>=</h2>
+                                                <h2>{this.state.result}</h2>
+                                            </React.Fragment>
+                                            : null
+                                        }
+                                    </div>
                                 </div>
                                 <div className='operators'>
                                     <div className='operator' onClick={this.handlePlus}>

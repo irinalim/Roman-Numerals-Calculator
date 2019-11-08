@@ -24,13 +24,20 @@ const arabicToRoman = new Map([
     [1, "I"],
 ]);
 
-export class RomanNumerals {
+export class RomanNumsProcessor {
 
     isValidRoman = (str: string) => {
+        if (!str) {
+            return false
+        }
         return (/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/).test(str);
     };
 
-    romanToArabic = (roman: string) => {
+    convertRomanToArabic = (roman: string) => {
+        if (!roman || !this.isValidRoman(roman)) {
+            return 0;
+        }
+
         let num = this.letterToInt(roman.charAt(0));
         let previous, current;
 
@@ -52,7 +59,10 @@ export class RomanNumerals {
     };
 
 
-    convertNumberToRoman = (num: number) => {
+    convertArabicToRoman = (num: number) => {
+        if (num <= 0) {
+            return "";
+        }
         let ans = "";
         const keys = Array.from(arabicToRoman.keys());
 
