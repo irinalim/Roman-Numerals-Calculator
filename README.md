@@ -1,4 +1,4 @@
-# Roman Numerals
+# Roman Numerals Calculator
 This app allows users to calculate roman numerals. Supported operations are addition, subtraction and multiplication.
 
 ##Technologies
@@ -10,7 +10,7 @@ Project is created with:
 ## Installation
 Clone the repository
 
-- Clone this repository to your local machine using `https://github.com/fvcproductions/SOMEREPO`
+- Clone this repository to your local machine using `git@github.com:irinalim/Roman-Numerals-Calculator.git`
 
 Run the app
 ```
@@ -18,4 +18,4 @@ yarn start
 ```
 
 ## Screenshot
-![Screenshot](../screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/irinalim/Roman-Numerals-Calculator/master/src/screenshots/screenshot.png)
