@@ -3,7 +3,7 @@ This app allows users to calculate roman numerals. Supported operations are addi
 
 > Note: the app supports only standard forms of Roman numerals (1 to 3999)
 
-##Technologies
+## Technologies
 Project is created with:
 - React
 - TypeScript
