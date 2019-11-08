@@ -9,7 +9,7 @@ Project is created with:
 - TypeScript
 - Ant Design
 
-Tests coverage with Jest and react-test-renderer:
+Project is covered by unit tests using Jest and react-test-renderer::
 - Сalculation/conversation logic: 100% coverage
 - UI component: 81% coverage
 
